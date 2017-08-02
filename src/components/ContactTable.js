@@ -16,8 +16,8 @@ const ContactTable = props => {
           <th>Phone</th>
         </tr>
       </thead>
-      <tbody>{contacts.map(item => (
-        <ContactRow {...item} />
+      <tbody>{contacts.map((item, index) => (
+        <ContactRow {...item} key={index} />
       ))}</tbody>
     </table>
   );
