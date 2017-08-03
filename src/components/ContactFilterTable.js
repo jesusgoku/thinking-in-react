@@ -17,6 +17,7 @@ class ContactFilterTable extends Component {
 
     this.handleQueryChange = this.handleQueryChange.bind(this);
     this.handleContactAdd = this.handleContactAdd.bind(this);
+    this.handleContactRemove = this.handleContactRemove.bind(this);
   }
 
   handleQueryChange(query) {
@@ -29,6 +30,12 @@ class ContactFilterTable extends Component {
     }));
   }
 
+  handleContactRemove(index) {
+    this.setState(prevState => ({
+      contacts: prevState.contacts.filter((item, i) => index !== i),
+    }));
+  }
+
   render() {
     const { contacts } = this.state;
     return (
@@ -38,7 +45,8 @@ class ContactFilterTable extends Component {
           onQueryChange={this.handleQueryChange} />
         <ContactTable
           contacts={contacts}
-          query={this.state.query} />
+          query={this.state.query}
+          onContactRemove={this.handleContactRemove} />
         <ContactForm onContactAdd={this.handleContactAdd} />
       </div>
     );
