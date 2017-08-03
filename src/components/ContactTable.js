@@ -1,35 +1,60 @@
-import React from 'react';
+import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 
 import ContactRow from './ContactRow';
 import ContactRowAction from './ContactRowAction';
+import ContactHeader from './ContactHeader';
 
 
-const handleContactRemove = (cb, index) => () => {
-  cb(index);
-}
+class ContactTable extends Component {
+  constructor(props) {
+    super(props);
 
-const ContactTable = props => {
-  const contacts = props.query !== ''
-    ? props.contacts.filter(item => item.name.toLowerCase().indexOf(props.query.toLowerCase()) !== -1)
-    : props.contacts;
-  return (
-    <table className="table">
-      <thead>
-        <tr>
-          <th>Name</th>
-          <th>Phone</th>
-          <th>Actions</th>
-        </tr>
-      </thead>
-      <tbody>{contacts.map((item, index) => (
-        <ContactRow
-          {...item}
-          key={index}
-          actions={<ContactRowAction onContactRemove={handleContactRemove(props.onContactRemove, index)} />} />
-      ))}</tbody>
-    </table>
-  );
+    this.state = {
+      sortBy: null,
+      sortAsc: true,
+    };
+
+    this.handleContactsSort = this.handleContactsSort.bind(this);
+  }
+
+  handleContactsSort(sortBy) {
+    this.setState(prevState => ({
+      sortBy,
+      sortAsc: prevState.sortBy === sortBy ? !prevState.sortAsc : true,
+    }));
+  }
+
+  render() {
+    const { contacts, query, onContactRemove, onContactsSort } = this.props;
+    const { sortBy, sortAsc } = this.state;
+    let filteredContacts = query !== ''
+      ? contacts.filter(item => item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1)
+      : contacts;
+    if (sortBy) {
+      filteredContacts = filteredContacts.sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
+      if (!sortAsc) {
+        filteredContacts = filteredContacts.reverse();
+      }
+    }
+    return (
+      <table className="table">
+        <thead>
+          <tr>
+            <th><ContactHeader onContactsSort={() => this.handleContactsSort('name')}>Name</ContactHeader></th>
+            <th><ContactHeader onContactsSort={() => this.handleContactsSort('phone')}>Phone</ContactHeader></th>
+            <th>Actions</th>
+          </tr>
+        </thead>
+        <tbody>{filteredContacts.map((item, index) => (
+          <ContactRow
+            {...item}
+            key={index}
+            actions={<ContactRowAction onContactRemove={() => onContactRemove(index)} />} />
+        ))}</tbody>
+      </table>
+    );
+  }
 }
 
 ContactTable.propTypes = {
