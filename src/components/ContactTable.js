@@ -3,7 +3,6 @@ import PropTypes from 'prop-types';
 
 import ContactRow from './ContactRow';
 import ContactRowAction from './ContactRowAction';
-import ContactHeader from './ContactHeader';
 
 
 class ContactTable extends Component {
@@ -26,11 +25,13 @@ class ContactTable extends Component {
   }
 
   render() {
-    const { contacts, query, onContactRemove, onContactsSort } = this.props;
+    const { contacts, query, onContactRemove } = this.props;
     const { sortBy, sortAsc } = this.state;
+
     let filteredContacts = query !== ''
       ? contacts.filter(item => item.name.toLowerCase().indexOf(query.toLowerCase()) !== -1)
       : contacts;
+
     if (sortBy) {
       filteredContacts = filteredContacts.sort((a, b) => a[sortBy].localeCompare(b[sortBy]));
       if (!sortAsc) {
@@ -41,8 +42,16 @@ class ContactTable extends Component {
       <table className="table">
         <thead>
           <tr>
-            <th><ContactHeader onContactsSort={() => this.handleContactsSort('name')}>Name</ContactHeader></th>
-            <th><ContactHeader onContactsSort={() => this.handleContactsSort('phone')}>Phone</ContactHeader></th>
+            <th onClick={() => this.handleContactsSort('name')} style={{ cursor: 'pointer' }}>
+              Name
+              &nbsp;
+              {sortBy === 'name' ? <i className={`fa fa-sort-${sortAsc ? 'asc' : 'desc'}`} /> : ''}
+            </th>
+            <th onClick={() => this.handleContactsSort('phone')} style={{ cursor: 'pointer' }}>
+              Phone
+              &nbsp;
+              {sortBy === 'phone' ? <i className={`fa fa-sort-${sortAsc ? 'asc' : 'desc'}`} /> : ''}
+            </th>
             <th>Actions</th>
           </tr>
         </thead>
