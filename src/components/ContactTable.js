@@ -3,6 +3,7 @@ import PropTypes from 'prop-types';
 
 import ContactRow from './ContactRow';
 import ContactRowAction from './ContactRowAction';
+import ContactHeader from './ContactHeader';
 
 
 class ContactTable extends Component {
@@ -38,20 +39,13 @@ class ContactTable extends Component {
         filteredContacts = filteredContacts.reverse();
       }
     }
+
     return (
       <table className="table">
         <thead>
           <tr>
-            <th onClick={() => this.handleContactsSort('name')} style={{ cursor: 'pointer' }}>
-              Name
-              &nbsp;
-              {sortBy === 'name' ? <i className={`fa fa-sort-${sortAsc ? 'asc' : 'desc'}`} /> : ''}
-            </th>
-            <th onClick={() => this.handleContactsSort('phone')} style={{ cursor: 'pointer' }}>
-              Phone
-              &nbsp;
-              {sortBy === 'phone' ? <i className={`fa fa-sort-${sortAsc ? 'asc' : 'desc'}`} /> : ''}
-            </th>
+            <ContactHeader sortBy={sortBy} sortAsc={sortAsc} name="name" onContactsSort={this.handleContactsSort}>Name</ContactHeader>
+            <ContactHeader sortBy={sortBy} sortAsc={sortAsc} name="phone" onContactsSort={this.handleContactsSort}>Phone</ContactHeader>
             <th>Actions</th>
           </tr>
         </thead>
