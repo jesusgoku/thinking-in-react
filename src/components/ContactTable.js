@@ -20,7 +20,7 @@ class ContactTable extends Component {
 
   handleContactsSort(sortBy) {
     this.setState(prevState => ({
-      sortBy,
+      sortBy: prevState.sortBy === sortBy && !prevState.sortAsc ? null : sortBy,
       sortAsc: prevState.sortBy === sortBy ? !prevState.sortAsc : true,
     }));
   }
